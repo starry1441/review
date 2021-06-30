@@ -1,8 +1,5 @@
 package work6_29;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Created with IntelliJ IDEA.
  * Description:用链表实现归并排序
@@ -24,22 +21,62 @@ class Node {
 
 public class Work2 {
 
-    public void mergeSortInternal(Node head,Node slow,Node fast) {
-        if ()
+    public Node merge(Node a,Node b) {
+        Node head = new Node();
+        Node cur = head;
+        while(a != null && b != null) {
+            if(a.val <= b.val) {
+                cur.next = a;
+                a = a.next;
+            }else {
+                cur.next = b;
+                b = b.next;
+            }
+            cur = cur.next;
+        }
+        if(a == null) {
+            cur.next = b;
+        }else {
+            cur.next = a;
+        }
+        return head.next;
     }
 
-    public void mergeSort(Node head) {
+    public Node mergeSort(Node head) {
+        if (head == null || head.next == null) return head;
         Node fast = head;
-        Node slow = head;
-        while(fast != null && fast.next != null) {
+        Node mid = head;
+        while(fast.next != null && fast.next.next != null) {
             fast = fast.next.next;
-            slow = slow.next;
+            mid = mid.next;
         }
-        mergeSortInternal(head,slow,fast);
+        Node half = mid.next;
+        mid.next = null;
+        Node h = mergeSort(head);
+        Node f = mergeSort(half);
+        return merge(h,f);
     }
 
     public static void main(String[] args) {
-
+        //8,4,5,7,1,3,6,2
+        Work2 a = new Work2();
+        int[] arr = {8,4,5,7,1,3,6,2};
+        Node head = new Node(8);
+        Node stp = head;
+        for (int i = 1; i < arr.length; i++) {
+            Node cur = new Node(arr[i]);
+            stp.next = cur;
+            stp = stp.next;
+        }
+//        while(head != null) {
+//            System.out.println(head.val);
+//            head = head.next;
+//        }
+        Node res = a.mergeSort(head);
+        while(res != null) {
+            System.out.println(res.val);
+            res = res.next;
+        }
     }
 
 }

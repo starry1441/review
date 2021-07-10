@@ -117,7 +117,67 @@ public class Sort {
         }
     }
 
-    //快速排序
+    //快速排序,最快O(n*logn),最慢O(n2),平均O(n*logn),空间复杂度O(logn-n),不稳定
+    public static void quickSort(int[] arr) {
+        quick(arr,0,arr.length-1);
+    }
+    public static void quick(int[] arr,int low,int high) {
+        if (low >= high) return;
+        int index = pivot(arr,low,high);
+        quick(arr,low,index-1);
+        quick(arr,index+1,high);
+    }
+    public static int pivot(int[] arr,int left,int right) {
+        int piv = arr[left];
+        while (left < right) {
+            while (left < right && piv < arr[right]) {
+                right--;
+            }
+            arr[left] = arr[right];
+            while (left < right && piv > arr[left]) {
+                left++;
+            }
+            arr[right] = arr[left];
+        }
+        arr[left] = piv;
+        return left;
+    }
+
+    //归并排序，最快O(n*logn),最慢O(n*logn),平均O(n*logn),空间复杂度O(n2),稳定
+    public static void mergeSort(int[] arr) {
+        int low = 0;
+        int high = arr.length-1;
+        part(arr,low,high);
+    }
+    public static void part(int[] arr,int low,int high) {
+        if (low >= high) return;
+        int mid = (low+high)/2;
+        part(arr,low,mid);
+        part(arr,mid+1,high);
+        merge(arr,low,mid,high);
+    }
+    public static void merge(int[] arr,int low,int mid,int high) {
+        int s1 = low;
+        int s2 = mid + 1;
+        int[] tmp = new int[high - low + 1];
+        int i = 0;
+        while (s1 <= mid && s2 <= high) {
+            if (arr[s1] <= arr[s2]) {
+                tmp[i++] = arr[s1++];
+            } else {
+                tmp[i++] = arr[s2++];
+            }
+        }
+        while (s1 <= mid) {
+            tmp[i++] = arr[s1++];
+        }
+        while (s2 <= high) {
+            tmp[i++] = arr[s2++];
+        }
+        for (int j = 0; j < tmp.length; j++) {
+            arr[low+j] = tmp[j];
+        }
+    }
 
     public static void main(String[] args) {
         int[] arr = {8,4,5,7,1,3,6,2};
@@ -125,7 +185,9 @@ public class Sort {
 //        bubbleSort(arr);
 //        insertSort(arr);
 //        shellSort(arr);
-        heapSort(arr);
+//        heapSort(arr);
+//        quickSort(arr);
+        mergeSort(arr);
         System.out.println(Arrays.toString(arr));
     }
 

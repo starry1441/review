@@ -1,10 +1,17 @@
-package work7_9;
+package work7_11;
 
 import java.util.Arrays;
 
-public class Sort {
+/**
+ * Created with IntelliJ IDEA.
+ * Description:7.11复习排序算法
+ * User: starry
+ * Date: 2021 -07 -11
+ * Time: 13:24
+ */
+public class Work1 {
 
-    //选择排序,最好O(n2),最坏O(n2),平均O(n2),不稳定
+    //选择排序，最好0(n2),最坏O(n2),平均O(n2),不稳定
     public static void selectSort(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
             for (int j = i+1; j < arr.length; j++) {
@@ -22,7 +29,7 @@ public class Sort {
         for (int i = 0; i < arr.length-1; i++) {
             boolean isSort = true;
             for (int j = 0; j < arr.length-i-1; j++) {
-                if (arr[j] > arr[j+1]) {
+                if (arr[j+1] < arr[j]) {
                     int tmp = arr[j];
                     arr[j] = arr[j+1];
                     arr[j+1] = tmp;
@@ -33,7 +40,7 @@ public class Sort {
         }
     }
 
-    //插入排序,最快O(n),最慢O(n2),平均O(n2),稳定
+    //插入排序,最好O(n),最坏O(n2),平均O(n2),稳定
     public static void insertSort(int[] arr) {
         int tmp = 0;
         for (int i = 1; i < arr.length; i++) {
@@ -50,11 +57,11 @@ public class Sort {
         }
     }
 
-    //希尔排序,最快O(n),最慢O(n2),平均O(1.3n-1.5n),不稳定
+    //希尔排序,最好O(n),最坏O(n2),平均O(1.3-1.5n),不稳定
     public static void shellSort(int[] arr) {
         int[] dll = {5,3,1};
         for (int i = 0; i < dll.length; i++) {
-            shell(arr, dll[i]);
+            shell(arr,dll[i]);
         }
     }
     public static void shell(int[] arr,int gap) {
@@ -73,18 +80,29 @@ public class Sort {
         }
     }
 
-    //堆排序,最快O(n*logn),最慢O(n*logn),平均O(n*logn),不稳定
+    //堆排序,O(nlogn),O(nlogn),O(nlogn),不稳定
+    public static void heapSort(int[] arr) {
+        createBigHeap(arr);
+        int end = arr.length-1;
+        while (end > 0) {
+            int tmp = arr[0];
+            arr[0] = arr[end];
+            arr[end] = tmp;
+            end--;
+            adjustDown(arr,end,0);
+        }
+    }
     public static void createBigHeap(int[] arr) {
         int len = arr.length-1;
         int parent = (len-1)/2;
         for (int i = parent; i >= 0; i--) {
-            adjustDown(arr,i,len);
+            adjustDown(arr,len,i);
         }
     }
-    public static void adjustDown(int[] arr,int parent,int len) {
-        int child = parent*2+1;
+    public static void adjustDown(int[] arr,int len,int parent) {
+        int child = 2*parent+1;
         while (child < len+1) {
-            if (child+1 <= len && arr[child] < arr[child+1]) {
+            if (child+1 <= len && arr[child+1] > arr[child]) {
                 child++;
             }
             if (arr[child] > arr[parent]) {
@@ -98,36 +116,25 @@ public class Sort {
             }
         }
     }
-    public static void heapSort(int[] arr) {
-        createBigHeap(arr);
-        int end = arr.length-1;
-        while (end > 0){
-            int top = arr[0];
-            arr[0] = arr[end];
-            arr[end] = top;
-            end--;
-            adjustDown(arr,0,end);
-        }
-    }
 
-    //快速排序,最快O(n*logn),最慢O(n2),平均O(n*logn),空间复杂度O(logn-n),不稳定
+    //快速排序,最好O(nlogn),最坏O(n2),平均O(nlogn),空间O(logn-n),不稳定
     public static void quickSort(int[] arr) {
         quick(arr,0,arr.length-1);
     }
     public static void quick(int[] arr,int low,int high) {
         if (low >= high) return;
-        int index = pivot(arr,low,high);
+        int index = sort(arr,low,high);
         quick(arr,low,index-1);
         quick(arr,index+1,high);
     }
-    public static int pivot(int[] arr,int left,int right) {
+    public static int sort(int[] arr,int left,int right) {
         int piv = arr[left];
         while (left < right) {
-            while (left < right && piv < arr[right]) {
+            while (left < right && arr[right] > piv) {
                 right--;
             }
             arr[left] = arr[right];
-            while (left < right && piv > arr[left]) {
+            while (left < right && arr[left] < piv) {
                 left++;
             }
             arr[right] = arr[left];
@@ -136,11 +143,9 @@ public class Sort {
         return left;
     }
 
-    //归并排序，最快O(n*logn),最慢O(n*logn),平均O(n*logn),空间复杂度O(n2),稳定
+    //归并排序,最好O(nlogn),最坏O(nlogn),平均O(nlogn),空间O(logn),稳定
     public static void mergeSort(int[] arr) {
-        int low = 0;
-        int high = arr.length-1;
-        part(arr,low,high);
+        part(arr,0,arr.length-1);
     }
     public static void part(int[] arr,int low,int high) {
         if (low >= high) return;
@@ -149,40 +154,39 @@ public class Sort {
         part(arr,mid+1,high);
         merge(arr,low,mid,high);
     }
-    public static void merge(int[] arr,int low,int mid,int high) {
-        int s1 = low;
-        int s2 = mid + 1;
-        int[] tmp = new int[high - low + 1];
+    public static void merge(int[] arr,int left,int mid,int right) {
+        int s1 = left;
+        int s2 = mid+1;
+        int[] tmp = new int[right-left+1];
         int i = 0;
-        while (s1 <= mid && s2 <= high) {
+        while (s1 <= mid && s2 <= right) {
             if (arr[s1] <= arr[s2]) {
                 tmp[i++] = arr[s1++];
-            } else {
+            }else {
                 tmp[i++] = arr[s2++];
             }
         }
         while (s1 <= mid) {
             tmp[i++] = arr[s1++];
         }
-        while (s2 <= high) {
+        while (s2 <= right) {
             tmp[i++] = arr[s2++];
         }
         for (int j = 0; j < tmp.length; j++) {
-            arr[low+j] = tmp[j];
+            arr[left+j] = tmp[j];
         }
     }
 
     public static void main(String[] args) {
-        int[] arr = {8,4,5,7,1,3,6,2};
-        System.out.println("原数组为："+Arrays.toString(arr));
+        int[] arr = {3,5,1,4,8,2,7,6};
 //        selectSort(arr);
 //        bubbleSort(arr);
 //        insertSort(arr);
 //        shellSort(arr);
-        heapSort(arr);
+//        heapSort(arr);
 //        quickSort(arr);
-//        mergeSort(arr);
-        System.out.println("排序结果为："+Arrays.toString(arr));
+        mergeSort(arr);
+        System.out.println(Arrays.toString(arr));
     }
 
 }

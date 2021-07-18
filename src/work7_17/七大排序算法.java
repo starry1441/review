@@ -9,7 +9,7 @@ import java.util.Arrays;
  * Date: 2021 -07 -17
  * Time: 13:51
  */
-public class Work1 {
+public class 七大排序算法 {
 
     //选择排序，最好O(n2)，最坏O(n2)，平均O(n2)，不稳定
     public static void selectSort(int[] arr) {

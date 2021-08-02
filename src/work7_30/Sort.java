@@ -1,21 +1,21 @@
-package work7_17;
+package work7_30;
 
 import java.util.Arrays;
 
 /**
  * Created with IntelliJ IDEA.
- * Description:第三遍手写七大排序算法
+ * Description:复习排序算法
  * User: starry
- * Date: 2021 -07 -17
- * Time: 13:51
+ * Date: 2021 -07 -31
+ * Time: 16:33
  */
-public class 七大排序算法 {
+public class Sort {
 
-    //选择排序，最好O(n2)，最坏O(n2)，平均O(n2)，不稳定
+    //选择排序，最好O（n2），最坏O（n2），平均O（n2），不稳定
     public static void selectSort(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
             for (int j = i+1; j < arr.length; j++) {
-                if (arr[i] > arr[j]) {
+                if(arr[i] > arr[j]) {
                     int tmp = arr[i];
                     arr[i] = arr[j];
                     arr[j] = tmp;
@@ -24,25 +24,23 @@ public class 七大排序算法 {
         }
     }
 
-    //冒泡排序，最好O(n)，最坏O(n2)，平均O(n2)，稳定
+    //冒泡排序，最好O（n），最坏O（n2），平均O（n2），稳定
     public static void bubbleSort(int[] arr) {
-        for (int i = 0; i < arr.length-1; i++) {
+        for (int i = 0; i < arr.length; i++) {
             boolean isSort = true;
             for (int j = 0; j < arr.length-i-1; j++) {
                 if (arr[j] > arr[j+1]) {
-                    int tmp = arr[j+1];
-                    arr[j+1] = arr[j];
-                    arr[j] = tmp;
+                    int tmp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = tmp;
                     isSort = false;
                 }
             }
-            if (isSort) {
-                break;
-            }
+            if (isSort) break;
         }
     }
 
-    //插入排序，最好O(n)，最坏O(n2)，平均O(n2)，稳定
+    //插入排序，最好O（n），最坏O（n2），平均O（n2），稳定
     public static void insertSort(int[] arr) {
         int tmp;
         for (int i = 1; i < arr.length; i++) {
@@ -51,7 +49,7 @@ public class 七大排序算法 {
             for (j = i-1; j >= 0; j--) {
                 if (arr[j] > tmp) {
                     arr[j+1] = arr[j];
-                }else {
+                } else {
                     break;
                 }
             }
@@ -59,14 +57,14 @@ public class 七大排序算法 {
         }
     }
 
-    //希尔排序，最好O(n)，最坏O(n2),平均O(n1.3-n1.5)，不稳定
+    //希尔排序，最好O（n），最坏O（n2），平均O（1.3-1.5n），不稳定
     public static void shellSort(int[] arr) {
         int[] dll = {5,3,1};
         for (int i = 0; i < dll.length; i++) {
-            shell(arr,dll[i]);
+            shell(dll[i],arr);
         }
     }
-    public static void shell(int[] arr,int gap) {
+    public static void shell(int gap, int[] arr) {
         int tmp;
         for (int i = gap; i < arr.length; i++) {
             tmp = arr[i];
@@ -74,7 +72,7 @@ public class 七大排序算法 {
             for (j = i-gap; j >= 0; j-=gap) {
                 if (arr[j] > tmp) {
                     arr[j+gap] = arr[j];
-                }else {
+                } else {
                     break;
                 }
             }
@@ -82,28 +80,28 @@ public class 七大排序算法 {
         }
     }
 
-    //堆排序，最好O(nlogn)，最坏O(nlogn)，平均O(nlogn)，不稳定
+    //堆排序，最快O（nlogn），最慢O（nlogn），平均O（nlogn），不稳定
     public static void heapSort(int[] arr) {
-        createBigHeap(arr);
+        createHeap(arr);
         int end = arr.length-1;
-        while (end > 0) {
+        while(end > 0) {
             int tmp = arr[0];
             arr[0] = arr[end];
             arr[end] = tmp;
             end--;
-            adjustDown(arr,end,0);
+            adjustDown(arr,0,end);
         }
     }
-    public static void createBigHeap(int[] arr) {
+    public static void createHeap(int[] arr) {
         int len = arr.length-1;
         int parent = (len-1)/2;
         for (int i = parent; i >= 0; i--) {
-            adjustDown(arr,len,i);
+            adjustDown(arr,i,len);
         }
     }
-    public static void adjustDown(int[] arr,int len,int parent) {
+    public static void adjustDown(int[] arr, int parent, int len) {
         int child = parent*2+1;
-        while (child <= len) {
+        while(child <= len) {
             if (child+1 <= len && arr[child+1] > arr[child]) {
                 child++;
             }
@@ -112,44 +110,46 @@ public class 七大排序算法 {
                 arr[child] = arr[parent];
                 arr[parent] = tmp;
                 parent = child;
-                child = parent*2+1;
+                child = 2*parent+1;
             }else {
                 break;
             }
         }
     }
 
-    //快速排序,最好O(nlogn)，最坏O(n2)，平均O(nlogn)，不稳定，空间O(nlogn-n2)
+    //快速排序，最快O（nlogn），最慢O（n2），平均O（nlogn），不稳定，空间O（logn-n2）
     public static void quickSort(int[] arr) {
-        quick(arr,0,arr.length-1);
+        int low = 0;
+        int high = arr.length-1;
+        quick(arr,low,high);
     }
-    public static void quick(int[] arr,int left,int right) {
-        if (left >= right) return;
-        int index = sort(arr,left,right);
-        quick(arr,left,index-1);
-        quick(arr,index+1,right);
+    public static void quick(int[] arr,int low, int high) {
+        if (low >= high) return;
+        int index = sort(arr,low,high);
+        quick(arr,low,index);
+        quick(arr,index+1,high);
     }
-    public static int sort(int[] arr,int left,int right) {
-        int piv = arr[left];
-        while (left < right) {
-            while (left < right && arr[right] > piv) {
-                right--;
+    public static int sort(int[] arr, int low, int high) {
+        int piv = arr[low];
+        while(low < high) {
+            while (low < high && arr[high] > piv) {
+                high--;
             }
-            arr[left] = arr[right];
-            while (left < right && arr[left] < piv) {
-                left++;
+            arr[low] = arr[high];
+            while (low < high && arr[low] < piv) {
+                low++;
             }
-            arr[right] = arr[left];
+            arr[high] = arr[low];
         }
-        arr[left] = piv;
-        return left;
+        arr[low] = piv;
+        return low;
     }
 
-    //归并排序，最好O(nlogn)，最坏O(nlogn)，平均O(nlogn)，稳定，空间O(n)
+    //归并排序，最好O（nlogn），最坏O（nlogn），平均O（nlogn），稳定，空间O（n）
     public static void mergeSort(int[] arr) {
         part(arr,0,arr.length-1);
     }
-    public static void part(int[] arr,int low,int high) {
+    public static void part(int[] arr, int low, int high) {
         if (low >= high) return;
         int mid = (low+high)/2;
         part(arr,low,mid);
@@ -157,27 +157,28 @@ public class 七大排序算法 {
         merge(arr,low,mid,high);
     }
     public static void merge(int[] arr,int low,int mid,int high) {
-        int s0 = low;
-        int s1 = mid+1;
+        int s1 = low;
+        int s2 = mid+1;
         int[] tmp = new int[high-low+1];
         int i = 0;
-        while (s0 <= mid && s1 <= high) {
-            if (arr[s0] >= arr[s1]) {
+        while (s1 <= mid && s2 <= high) {
+            if (arr[s1] <= arr[s2]) {
                 tmp[i++] = arr[s1++];
-            }else {
-                tmp[i++] = arr[s0++];
+            } else {
+                tmp[i++] = arr[s2++];
             }
         }
-        while (s0 <= mid) {
-            tmp[i++] = arr[s0++];
-        }
-        while (s1 <= high) {
+        while (s1 <= mid) {
             tmp[i++] = arr[s1++];
+        }
+        while (s2 <= high) {
+            tmp[i++] = arr[s2++];
         }
         for (int j = 0; j < tmp.length; j++) {
             arr[low+j] = tmp[j];
         }
     }
+
 
 
     public static void main(String[] args) {
@@ -186,9 +187,9 @@ public class 七大排序算法 {
 //        bubbleSort(arr);
 //        insertSort(arr);
 //        shellSort(arr);
-        heapSort(arr);
+//        heapSort(arr);
 //        quickSort(arr);
-//        mergeSort(arr);
+        mergeSort(arr);
         System.out.println(Arrays.toString(arr));
     }
 

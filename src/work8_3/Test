@@ -1,0 +1,40 @@
+-- 有一张员工表emp，字段：姓名name，性别sex，部门depart，工资salary。查询以下数据：
+-- (1)查询男女员工的平均工资
+-- (2)查询各部门的总薪水
+-- (3)查询总薪水排名第二的部门
+-- (4)查询姓名重复的员工信息
+-- (5)查询各部门薪水大于10000的男性员工的平均薪水
+
+use review;
+
+drop table if exists emp;
+create table emp(
+	name varchar(10) comment "姓名",
+	sex varchar(1) comment "性别",
+	depart varchar(20) comment "部门",
+	salary int comment "工资"
+);
+
+insert into emp values
+("阿星","男","计算机",56),
+("阿奇","女","计算机",66),
+("阿甜","女","网络",49),
+("阿纳","男","能源",89),
+("阿赫","男","会计",46),
+("阿辰","女","能源",55),
+("阿彪","男","网络",66),
+("阿妹","女","计算机",99),
+("阿星","男","能源",78);
+
+
+select avg(salary) from emp group by sex;
+
+select sum(salary) from emp group by depart;
+
+select depart from emp group by depart order by sum(salary) desc limit 1,1;
+
+select * from emp group by name having count(name) > 1;
+
+select depart,avg(salary) from emp where salary>55 and sex='男' group by depart;
+
+

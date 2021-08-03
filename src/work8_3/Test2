@@ -1,0 +1,62 @@
+-- 现在有员工表、部门表和薪资表。
+-- 部门表depart的字段有depart_id， name；
+-- 员工表 staff 的字段有 staff_id， name， age， depart_id；
+-- 薪资表salary 的字段有 salary_id，staff_id，salary，month。
+create database stafftest;
+
+use stafftest;
+
+drop table if exists depart;
+create table depart(
+	depart_id int primary key,
+	name varchar(20)
+);
+
+
+insert into depart values
+(1,"计算机"),
+(2,"电控"),
+(3,"会计"),
+(4,"能源");
+
+drop table if exists staff;
+create table staff(
+	staff_id int primary key,
+	name varchar(20),
+	age int,
+	depart_id int,
+	foreign key (depart_id) references depart(depart_id)
+);
+
+insert into staff values
+(1,"阿星",18,1),
+(2,"阿明",44,1),
+(3,"阿珍",5,1),
+(4,"阿甜",46,2),
+(5,"阿奶",75,2),
+(6,"阿彪",26,3),
+(7,"阿忠",21,3),
+(8,"阿赫",33,4),
+(9,"阿阳",22,4);
+
+
+drop table if exists salary;
+create table salary(
+	salary_id int,
+	staff_id int,
+	foreign key (staff_id) references staff(staff_id),
+	salary int,
+	month datetime
+);
+
+
+insert into salary values
+(1,1,56,"2016.9.1"),
+(2,2,88,"2016.9.1"),
+(3,3,16,"2016.9.1"),
+(4,4,78,"2016.9.1"),
+(5,5,44,"2016.9.1"),
+(6,6,48,"2016.9.1"),
+(7,7,75,"2016.9.1"),
+(8,8,68,"2016.9.1"),
+(9,9,79,"2016.9.1");

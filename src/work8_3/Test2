@@ -39,7 +39,6 @@ insert into staff values
 (8,"阿赫",33,4),
 (9,"阿阳",22,4);
 
-
 drop table if exists salary;
 create table salary(
 	salary_id int,
@@ -48,7 +47,6 @@ create table salary(
 	salary int,
 	month datetime
 );
-
 
 insert into salary values
 (1,1,56,"2016.9.1"),
@@ -60,3 +58,9 @@ insert into salary values
 (7,7,75,"2016.9.1"),
 (8,8,68,"2016.9.1"),
 (9,9,79,"2016.9.1");
+
+-- （问题a）：求每个部门'2016-09'月份的部门薪水总额
+select depart.name,sum(salary)
+where depart.depart_id = staff.depart_id and staff.staff_id = salary.staff_id
+group by depart.name
+having salary.month = '2016-09'

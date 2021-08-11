@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class Work4 {
 
-    public ArrayList<Integer> spiralOrder(int[][] matrix) {
+    public static ArrayList<Integer> spiralOrder(int[][] matrix) {
         ArrayList<Integer> list = new ArrayList<>();
         if(matrix.length == 0) return list;
         int top = 0;
